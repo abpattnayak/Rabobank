@@ -1,2 +1,0 @@
-# Rabobank
-Scrapy
