@@ -1,2 +1,5 @@
 projects:
-  rabobank_scrape.py: 245505
+  default: 245505
+requirements_file: requirements.txt
+images:
+  default: abpattnayak/Rabobank
