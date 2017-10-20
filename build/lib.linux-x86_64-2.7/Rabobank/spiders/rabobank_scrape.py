@@ -3,7 +3,7 @@ from scrapy import log
 from Rabobank.items import RabobankItem
 import os
 import re
-from format import doFormattingUnicode, changeMonth
+from format import doFormattingUnicode
 from dateutil.parser import parse
 from scrapContainer import scrap
 
@@ -11,7 +11,7 @@ from scrapContainer import scrap
 class Rabobank(scrapy.Spider):
 	name = "my_scraper"
 	allowed_domains = ['rabobank.nl']
-	start_urls = ( 'https://www.rabobank.nl/particulieren/hypotheek/hypotheekrente/?intcamp=pa-hypotheek&inttype=tegel-hypotheekrente&intsource=hypotheek')
+	start_urls = ( 'https://www.rabobank.nl/particulieren/hypotheek/hypotheekrente/?intcamp=pa-hypotheek&inttype=tegel-hypotheekrente&intsource=hypotheek', )
 
 
 	def parse(self, response):
@@ -19,7 +19,7 @@ class Rabobank(scrapy.Spider):
 		
 		#remove output file if exists
 		try:
-			os.remove("output-rabo.csv")
+			os.remove("output.csv")
 		except OSError:
 			pass
 
@@ -33,7 +33,7 @@ class Rabobank(scrapy.Spider):
 		
 		#validity since date search
 		validString = response.xpath("//li[contains(text(),'totdat wij de tarieven wijzigen')]/text()").extract()
-		validString = changeMonth(doFormattingUnicode(str(validString)))
+		validString = doFormattingUnicode(str(validString))
 
 		regex = r"([0-9]+\s+[a-z]+\s+[0-9])\w+"
 		pattern = re.compile(regex)
@@ -46,7 +46,7 @@ class Rabobank(scrapy.Spider):
 		#validString = "18 september 2017"
 
 		f = open("output.csv","a+")
-		#f.write("CountryCode;ProviderName;ProductName;LoanType;Period;Rate;Coverage Start;Coverage End;Check Date;ValidSinceDate;NHG\n")
+		#f.write("CountryCode;ProviderName;ProductName;LoanType;Period;Rate;Coverage;Check Date;ValidSinceDate;NHG\n")
 	
 		for divRow in divRows:
 			head = divRow.xpath("div/h2/text()").extract()

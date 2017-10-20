@@ -4,8 +4,8 @@ import os
 import datetime
 from format import doFormattingUnicode, doFormattingProductName, findCoverage
 
-def scrap(divRow, validSince):
-	f = open("output-rabo.csv", "a+")
+def rabo_scraper(divRow, validSince):
+	f = open("output.csv", "a+")
 	
 	now = datetime.datetime.now()
 	tableRows = divRow.xpath("div/table/tbody/tr")

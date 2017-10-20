@@ -5,7 +5,7 @@ import datetime
 from format import doFormattingUnicode, doFormattingProductName, findCoverage
 
 def scrap(divRow, validSince):
-	f = open("output-rabo.csv", "a+")
+	f = open("output.csv", "a+")
 	
 	now = datetime.datetime.now()
 	tableRows = divRow.xpath("div/table/tbody/tr")
@@ -31,12 +31,7 @@ def scrap(divRow, validSince):
 			f.write(";")
 			if(j!=0):
 				coverage = doFormattingUnicode(str(headers[j].xpath("strong/text()").extract()))
-				coverage = findCoverage(coverage).split()
-				coverageStart = coverage[0]
-				coverageEnd = coverage[1]
-				f.write(coverageStart)
-				f.write(";")
-				f.write(coverageEnd)
+				f.write(findCoverage(coverage))
 				f.write(";")
 				f.write(str(now.strftime("%Y-%m-%d")))
 				f.write(";")
