@@ -1,46 +1,26 @@
 import scrapy
 from scrapy import log
 import os
-import datetime
-from format import doFormattingUnicode, doFormattingProductName, findCoverage
 
-def scrap(divRow, validSince):
-	f = open("output.csv", "a+")
+def scrap(divRow):
+	f = open("output.csv", "w+")
+	f.write(str(divRow.xpath("h3/text()").extract()).replace("']","").replace("[u'",""))
+	f.write("\n")
 	
-	now = datetime.datetime.now()
 	tableRows = divRow.xpath("div/table/tbody/tr")
 	headers = tableRows[0].xpath("td")
-
+	f.write(" \t")
+	for i in range(1,len(headers)):
+		#log.msg("XX %s" % str(headers[i].xpath("strong/text()").extract()).replace(",",".").replace("[u'","").replace("']",""), level = log.DEBUG)
+		f.write(str(headers[i].xpath("strong/text()").extract()).replace(",",".").replace("[u'","").replace("']",""))
+		f.write("\t")
+	f.write("\n")
 	for i in range(1,len(tableRows)):
 		tableDatas = tableRows[i].xpath("td")
-		for j in range(1,len(tableDatas)):
+		for j in range(0,len(tableDatas)):
 			#log.msg("XX %s" % str(tableDatas[j].xpath("text()").extract()).replace("[u'","").replace("']",""), level = log.DEBUG)
-			productName = doFormattingProductName((str(divRow.xpath("h2/text()").extract())))
-			#static values
-			f.write("NL;Robobank;")
-			f.write("Rabobank")
-			f.write(doFormattingUnicode(productName))
-			f.write(";")
-
-			#static values start
-			f.write("Annuiteitenhypotheek;")
-
-			f.write(doFormattingUnicode(str(tableDatas[0].xpath("text()").extract())))
-			f.write(";")
-			f.write(doFormattingUnicode(str(tableDatas[j].xpath("text()").extract())))
-			f.write(";")
-			if(j!=0):
-				coverage = doFormattingUnicode(str(headers[j].xpath("strong/text()").extract()))
-				f.write(findCoverage(coverage))
-				f.write(";")
-				f.write(str(now.strftime("%Y-%m-%d")))
-				f.write(";")
-				f.write(validSince)
-				f.write(";")
-				#static values start
-				f.write("N;")
-				f.write("\n")
-
-			#f.write("\n")
-	#f.write("\n\n")
+			f.write(str(tableDatas[j].xpath("text()").extract()).replace(",",".").replace("[u'","").replace("']",""))
+			f.write("\t")
+		f.write("\n")
+	f.write("\n\n")
 	f.close()
